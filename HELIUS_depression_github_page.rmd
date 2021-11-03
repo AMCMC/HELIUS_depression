@@ -1,0 +1,36 @@
+---
+title: "HELIUS depression microbiome; Bos et al; Nature communications"
+output:
+  html_document:
+    toc: yes
+    toc_depth: 2
+    number_sections: yes
+    theme: united
+  pdf_document:
+    toc: yes
+    toc_depth: '2'
+---
+
+<style>
+p.caption {
+  font-size: 0.8em;
+}
+</style>
+
+```{r setup rmd, include=FALSE}
+# setting global options for the rmd markdown
+knitr::opts_chunk$set(echo = T) # include chunck code
+knitr::opts_chunk$set(cache = T) # use chuck results from cache if not modified (speed)
+```
+
+This page will hold the methods section for ....
+
+# ASV inference 
+
+# Data wrangle
+
+# Alpha
+
+# Beta
+
+# Other
