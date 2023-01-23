@@ -3,12 +3,12 @@ title: "HELIUS depression microbiome; Bos et al; Nature communications"
 output:
   html_document:
     toc: yes
-    toc_depth: 2
+    toc_depth: 1
     number_sections: yes
     theme: united
   pdf_document:
     toc: yes
-    toc_depth: '2'
+    toc_depth: '1'
 ---
 
 <style>
@@ -23,14 +23,112 @@ knitr::opts_chunk$set(echo = T) # include chunck code
 knitr::opts_chunk$set(cache = T) # use chuck results from cache if not modified (speed)
 ```
 
-This page will hold the methods section for ....
+This page will hold the code for some of the bioinformatics and statistical methods used for the article [The gut microbiota and depressive symptoms across ethnic groups](https://www.nature.com/articles/s41467-022-34504-1)
+
 
 # ASV inference 
 
-# Data wrangle
+# Statistical analysis
 
-# Alpha
+## Generic SPSS code Linear regression Models 
 
-# Beta
+```{r, echo=F}
+flextable::flextable(rio::import("analysis_code.xlsx"))
+```
 
-# Other
+## Generic SPSS code Linear regression Models 1 - 3
+
+REGRESSION
+
+  /MISSING LISTWISE
+  
+  /STATISTICS COEFF OUTS CI(95) R ANOVA CHANGE ZPP
+  
+  /CRITERIA=PIN(.05) POUT(.10)
+  
+  /NOORIGIN 
+  
+  /DEPENDENT [Dependent variable]
+  
+  /METHOD=ENTER [Predictor variable]
+  
+  /METHOD=ENTER [Covariate list Model 1]
+  
+  /METHOD=ENTER [Covariate list Model 2]   
+  
+  /METHOD=ENTER [Covariate list Model 3]
+  
+  /SCATTERPLOT=([Dependent variable] ,*ZRESID)
+  
+  /RESIDUALS HISTOGRAM(ZRESID) NORMPROB(ZRESID)
+
+
+
+
+## Generic SPSS code ANOVA (testing interaction ethnicity by alpha diverity or relative abundcances)
+
+UNIANOVA H1_PHQ9_sumscore BY H1_EtnTotaal H1_geslacht WITH shannon H1_lft
+
+  /METHOD=SSTYPE(3)
+  
+  /INTERCEPT=INCLUDE
+  
+  /PRINT ETASQ DESCRIPTIVE PARAMETER
+  
+  /CRITERIA=ALPHA(.05)
+  
+  /DESIGN=H1_EtnTotaal*shannon H1_EtnTotaal shannon H1_geslacht H1_lft
+
+
+
+
+## SPSS code Linear regression forward selection PcoA
+
+
+REGRESSION
+
+  /MISSING LISTWISE
+  
+  /STATISTICS COEFF OUTS CI(95) R ANOVA CHANGE ZPP
+  
+  /CRITERIA=PIN(.05) POUT(.10)
+  
+  /NOORIGIN 
+  
+  /DEPENDENT H1_PHQ9_sumscore
+  
+  /METHOD=FORWARD
+  
+
+PC01BC PC02BC PC03BC PC04BC PC05BC PC06BC PC07BC PC08BC PC09BC PC010BC PC011BC PC012BC 
+    PC013BC PC014BC PC015BC PC016BC PC017BC PC018BC PC019BC PC020BC .  
+
+Retained: 	Weighted UniFrac 	PC02 PC03 PC07 PC011 PC014 PC019
+
+Bray-Curtis 		PC02BC PC03BC PC04BC PC05BC PC014BC PC016BC PC018BC
+
+
+
+## Generic SPSS code Linear regression Models Beta-Diversity
+
+REGRESSION
+
+  /MISSING LISTWISE
+  
+  /STATISTICS COEFF OUTS CI(95) R ANOVA CHANGE ZPP
+  
+  /CRITERIA=PIN(.05) POUT(.10)
+  
+  /NOORIGIN 
+  
+  /DEPENDENT [Dependent variable]
+  
+  /METHOD=ENTER [Ethicity  or  Empty]
+  
+  /METHOD=ENTER [Covariate list Model 1 -3]
+  
+  /METHOD=ENTER [retained principal components Beta-diversity]
+  
+  /SCATTERPLOT=([Dependent variable] ,*ZRESID)
+  
+  /RESIDUALS HISTOGRAM(ZRESID) NORMPROB(ZRESID)
