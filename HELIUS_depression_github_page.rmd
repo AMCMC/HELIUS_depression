@@ -28,6 +28,46 @@ This page will hold the code for some of the bioinformatics and statistical meth
 
 # ASV inference 
 
+```
+### process reads
+
+# merge reads, max mismatches 30
+#~/usearch64 -fastq_mergepairs $data_dir/*_R1*.fastq -relabel @ -fastq_maxdiffs 30 -fastq_pctid 80  -fastqout ./merged.fastq 2>&1 | tee -a helius.log
+
+# filter reads to max expected error 1 per read
+#~/usearch64  -fastq_filter ./merged.fastq  -fastq_maxee 1 -fastaout ./filtered.fasta 2>&1 | tee -a helius.log
+
+# dereplicate 
+#~/usearch64 -fastx_uniques ./filtered.fasta -fastaout ./uniques.fa -sizeout -relabel Uniq 2>&1 | tee -a helius.log
+
+
+
+###### ASV pipeline
+
+# UNOISE3 denoising
+#~/usearch64 -unoise3 ./uniques.fa -zotus ./zotus.fa 2>&1 | tee -a helius.log
+
+# make ASV table
+~/usearch64 -otutab ./merged.fastq -zotus ./zotus.fa -otutabout ./helius.unoise3.ASV.table_FINAL.txt 2>&1 | tee -a helius.log
+
+
+ 
+ 
+###### OTU pipeline
+
+# UPARSE OTU clustering
+~/usearch64 -cluster_otus ./uniques.fa -otus ./otus.fa -relabel Otu 2>&1 | tee -a helius.log
+
+# make OTU table
+~/usearch64 -otutab ./merged.fastq -otus ./otus.fa -otutabout ./helius.uparse.OTU.table_FINAL.txt  2>&1 | tee -a helius.log
+
+## assign taxonomy with DADA2 (SILVA, Greengenes)
+
+## allign ASVs with MAFFT
+
+## make tree with IQ-Tree / FastTree Dbl
+```
+
 # Statistical analysis
 
 ## Generic SPSS code Linear regression Models 

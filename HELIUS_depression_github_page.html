@@ -378,6 +378,43 @@ statistical methods used for the article <a href="https://www.nature.com/article
 microbiota and depressive symptoms across ethnic groups</a></p>
 <div id="asv-inference" class="section level1" number="1">
 <h1><span class="header-section-number">1</span> ASV inference</h1>
+<pre><code>### process reads
+
+# merge reads, max mismatches 30
+#~/usearch64 -fastq_mergepairs $data_dir/*_R1*.fastq -relabel @ -fastq_maxdiffs 30 -fastq_pctid 80  -fastqout ./merged.fastq 2&gt;&amp;1 | tee -a helius.log
+
+# filter reads to max expected error 1 per read
+#~/usearch64  -fastq_filter ./merged.fastq  -fastq_maxee 1 -fastaout ./filtered.fasta 2&gt;&amp;1 | tee -a helius.log
+
+# dereplicate 
+#~/usearch64 -fastx_uniques ./filtered.fasta -fastaout ./uniques.fa -sizeout -relabel Uniq 2&gt;&amp;1 | tee -a helius.log
+
+
+
+###### ASV pipeline
+
+# UNOISE3 denoising
+#~/usearch64 -unoise3 ./uniques.fa -zotus ./zotus.fa 2&gt;&amp;1 | tee -a helius.log
+
+# make ASV table
+~/usearch64 -otutab ./merged.fastq -zotus ./zotus.fa -otutabout ./helius.unoise3.ASV.table_FINAL.txt 2&gt;&amp;1 | tee -a helius.log
+
+
+ 
+ 
+###### OTU pipeline
+
+# UPARSE OTU clustering
+~/usearch64 -cluster_otus ./uniques.fa -otus ./otus.fa -relabel Otu 2&gt;&amp;1 | tee -a helius.log
+
+# make OTU table
+~/usearch64 -otutab ./merged.fastq -otus ./otus.fa -otutabout ./helius.uparse.OTU.table_FINAL.txt  2&gt;&amp;1 | tee -a helius.log
+
+## assign taxonomy with DADA2 (SILVA, Greengenes)
+
+## allign ASVs with MAFFT
+
+## make tree with IQ-Tree / FastTree Dbl</code></pre>
 </div>
 <div id="statistical-analysis" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Statistical
